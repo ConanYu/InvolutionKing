@@ -75,7 +75,7 @@ function get_line_graph_background_data(ratings, get_color) {
                 yAxis: pre,
                 itemStyle: {
                     color: get_color(pre),
-                    opacity: 0.3,
+                    opacity: 0.5,
                 }
             },
             {
@@ -94,4 +94,37 @@ function get_line_graph_background_data(ratings, get_color) {
         pre = x;
     }
     return [color_data, markline_data];
+}
+
+
+function get_background_series(oj_name) {
+    // 根据oj得到对应的折线图背景颜色层
+    let ret = [null, null];
+    if (oj_name === 'atcoder') {
+        ret = get_line_graph_background_data(atcoder_ratings, getAtcoderRatingColor);
+    } else if (oj_name === 'codeforces') {
+        ret = get_line_graph_background_data(codeforces_ratings, getCodeforcesRatingColor);
+    } else if (oj_name === 'nowcoder') {
+        ret = get_line_graph_background_data(nowcoder_ratings, getNowcoderRatingColor);
+    }
+    let background_data = ret[0], markline_data = ret[1];
+    return {
+        type: "line",
+        markArea: {
+            silent: true,
+            data: background_data
+        },
+        markLine: {
+            silent: true,
+            symbol: 'none',
+            label: {
+                position: 'start',
+            },
+            lineStyle: {
+                type: 'solid',
+                width: 0,
+            },
+            data: markline_data,
+        },
+    };
 }
