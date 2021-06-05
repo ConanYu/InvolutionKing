@@ -3,8 +3,8 @@ package main
 import (
 	"InvolutionKing/src/util"
 	"InvolutionKing/src/web"
-	"fmt"
 	"github.com/spf13/viper"
+	"log"
 	"path"
 )
 
@@ -15,7 +15,7 @@ func LoadViper() {
 	viper.AddConfigPath(configPath)
 	err := viper.ReadInConfig()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err.Error())
 		return
 	}
 }
