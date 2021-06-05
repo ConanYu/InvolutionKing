@@ -95,6 +95,8 @@ func GetUserRecord(context *gin.Context) {
 		Submit  []SubmitRecord  `json:"submit_record"`
 	}
 	var result UserRecord
+	result.Contest = make([]ContestRecord, 0)
+	result.Submit = make([]SubmitRecord, 0)
 	for _, response := range userContestRecordResponses {
 		var data ContestRecord
 		data.Platform = response.Platform
