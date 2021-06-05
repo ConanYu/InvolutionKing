@@ -27,9 +27,8 @@ function getContestDataFromResponse(response) {
         }
         let rating_list = [];
         for (let record of contestRecord.data.record) {
-            let datetime = new Date(record.timestamp * 1000);
             rating_list.push([
-                datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" + datetime.getDate(),
+                record.timestamp * 1000,
                 record.rating,
                 record.name,
                 record.url,
