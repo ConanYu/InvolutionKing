@@ -223,7 +223,7 @@ function draw_bar_graph(dom, data) {
     ratings.sort(function (lhs, rhs) { return lhs - rhs; });
     let min_val = ratings[0];
     let max_val = ratings[ratings.length - 1];
-    console.log(min_val, max_val);
+    // console.log(min_val, max_val);
     let series_list = [];
     let pieces = [];
     for (let rating of ratings) {
@@ -253,7 +253,7 @@ function draw_bar_graph(dom, data) {
             data: serie,
         })
     }
-    console.log(ratings, series_list, min_val, max_val);
+    // console.log(ratings, series_list, min_val, max_val);
     let option = {
         tooltip: {
             trigger: 'axis',
