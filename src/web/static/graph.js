@@ -115,8 +115,10 @@ function draw_line_graph(dom, data) {
             connectNulls: true,
             endLabel: {
                 show: true,
+                overflow: 'break',
+                width: 80,
                 formatter: function (params) {
-                    return user_data["username"] + ': ' + params.value[2];
+                    return user_data["username"] + '\n' + params.value[2];
                 },
             },
             labelLayout: {
@@ -227,18 +229,18 @@ function draw_bar_graph(dom, data) {
     let series_list = [];
     let pieces = [];
     for (let rating of ratings) {
-        pieces.push({ value: rating, });
+        pieces.push({ value: parseInt(rating), });
         let serie = [];
         for (let user_data of data["datas"]) {
             let have = false;
             for (let solved of user_data["solved_list"]) {
                 if (rating === solved[0]) {
                     have = true;
-                    serie.push([solved[1], user_data["username"], rating]);
+                    serie.push([solved[1], user_data["username"], parseInt(rating)]);
                     break;
                 }
             }
-            if (!have) serie.push([undefined, user_data["username"], rating]);
+            if (!have) serie.push([undefined, user_data["username"], parseInt(rating)]);
         }
         series_list.push({
             name: rating,
@@ -275,7 +277,7 @@ function draw_bar_graph(dom, data) {
             data: Ys,
         },
         visualMap: {
-            show: true,
+            show: false,
             type: 'piecewise',
             dimension: 2,
             min: min_val,
