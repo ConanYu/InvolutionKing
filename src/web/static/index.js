@@ -6,9 +6,10 @@ let platforms = [
     "vjudge",
 ];
 
-function newInput() {
+function newInput(index) {
     let ret = {
         "name": "",
+        "index": index,
     };
     for (let platform of platforms) {
         ret[platform] = "";
@@ -81,14 +82,25 @@ new Vue({
     delimiters: ["!{", "}!"],
     el: "#app",
     data: {
-        inputs: [newInput()],
+        inputs: window.localStorage.getItem("cache") ?
+            JSON.parse(window.localStorage.getItem("cache")) : [newInput(0)],
         platforms: platforms,
         gaoStatus: "OK",
         show: getAllShowCondition(),
     },
     methods: {
         addMember: function () {
-            this.$data.inputs.push(newInput());
+            let size = this.$data.inputs.length;
+            this.$data.inputs.push(newInput(size));
+        },
+        deleteMember: function (index) {
+            let inputs = [];
+            for (let i in this.$data.inputs) {
+                if (parseInt(i) !== index) {
+                    inputs.push(this.$data.inputs[i]);
+                }
+            }
+            this.$data.inputs = inputs;
         },
         gao: function () {
             if (this.$data.gaoStatus === "OK") {
@@ -120,6 +132,9 @@ new Vue({
                     app.$data.gaoStatus = "OK";
                 });
             }
+        },
+        saveInput: function () {
+            window.localStorage.setItem("cache", JSON.stringify(this.$data.inputs));
         },
     },
 });
