@@ -8,7 +8,6 @@ let platforms = [
 
 function newInput(index) {
     let ret = {
-        "name": "",
         "index": index,
     };
     for (let platform of platforms) {
@@ -97,6 +96,7 @@ new Vue({
             let inputs = [];
             for (let i in this.$data.inputs) {
                 if (parseInt(i) !== index) {
+                    this.$data.inputs[i].index = inputs.length;
                     inputs.push(this.$data.inputs[i]);
                 }
             }
@@ -116,20 +116,28 @@ new Vue({
                         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
                     },
                 }).then(function (rsp) {
-                    app.$data.show = getAllShowCondition();
-                    let contestData = getContestDataFromResponse(rsp);
-                    let submitData = getSubmitDataFromResponse(rsp);
-                    for (let platform in contestData) {
-                        let dom = document.getElementById(platform + "-contest-graph");
-                        draw_line_graph(dom, contestData[platform.valueOf()]);
-                        app.$data.show[platform + "_contest_graph_show"] = true;
+                    try {
+                        app.$data.show = getAllShowCondition();
+                        let contestData = getContestDataFromResponse(rsp);
+                        let submitData = getSubmitDataFromResponse(rsp);
+                        for (let platform in contestData) {
+                            let dom = document.getElementById(platform + "-contest-graph");
+                            draw_line_graph(dom, contestData[platform.valueOf()]);
+                            app.$data.show[platform + "_contest_graph_show"] = true;
+                        }
+                        for (let platform in submitData) {
+                            let dom = document.getElementById(platform + "-submit-graph");
+                            draw_bar_graph(dom, submitData[platform.valueOf()]);
+                            app.$data.show[platform + "_submit_graph_show"] = true;
+                        }
+                        app.$data.gaoStatus = "OK";
+                    } catch (ex) {
+                        console.log(ex);
+                        app.$data.gaoStatus = "ERROR";
                     }
-                    for (let platform in submitData) {
-                        let dom = document.getElementById(platform + "-submit-graph");
-                        draw_bar_graph(dom, submitData[platform.valueOf()]);
-                        app.$data.show[platform + "_submit_graph_show"] = true;
-                    }
-                    app.$data.gaoStatus = "OK";
+                }).catch(function (err) {
+                    console.log(err);
+                    app.$data.gaoStatus = "ERROR";
                 });
             }
         },

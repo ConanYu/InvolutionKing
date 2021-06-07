@@ -21,7 +21,7 @@
     <table class="table">
         <thead>
         <tr>
-            <td>name</td>
+            <td>index</td>
             <td v-for="platform in platforms">
                 !{ platform }!
             </td>
@@ -30,8 +30,8 @@
         </thead>
         <tbody>
         <tr v-for="input in inputs">
-            <td>
-                <input type="text" class="form-control" style="border: 0" v-model="input.name">
+            <td style="vertical-align: middle;">
+                !{ input.index + 1 }!
             </td>
             <td v-for="platform in platforms">
                 <input type="text" class="form-control" style="border: 0" v-model="input[platform]">
@@ -53,7 +53,10 @@
     <button type="button" :class="gaoStatus === 'OK' ? 'btn btn-primary' : 'btn btn-success'" style="color: #fff" @click="gao()">
         <i class="fa fa-spinner fa-spin" v-show="gaoStatus !== 'OK'"></i>
         <span v-show="gaoStatus === 'OK'">Confirm</span>
+        <span v-show="gaoStatus !== 'OK'">Crawling</span>
     </button>
+    <p v-show="gaoStatus === 'RUN'">Graph is loading...</p>
+    <p v-show="gaoStatus === 'ERROR'">Something is error. Please reload or new issue to https://github.com/ConanYu/InvolutionKing/issues.</p>
     <div class="graph">
         <div v-for="platform in platforms">
             <div :id="platform + '-contest-graph'" v-show="show[platform + '_contest_graph_show']" style="width: 600px; height: 400px; display: inline-block;"></div>
