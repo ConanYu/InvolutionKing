@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"time"
 )
 
 func IndexPage(context *gin.Context) {
@@ -25,6 +26,8 @@ func UserContestRecordHandle(platform string, handle string, promises *[]*servic
 	var response service.UserContestRecordResponse
 	response.Platform = platform
 	response.Handle = handle
+	var emptyResponse pb.UserContestRecord
+	response.Response = &emptyResponse
 	*promises = append(*promises, &response)
 	service.AsyncGetUserContestRecord(platform, handle, &response)
 }
@@ -37,6 +40,8 @@ func UserSubmitRecordHandle(platform string, handle string, promises *[]*service
 	var response service.UserSubmitRecordResponse
 	response.Platform = platform
 	response.Handle = handle
+	var emptyResponse pb.UserSubmitRecord
+	response.Response = &emptyResponse
 	*promises = append(*promises, &response)
 	service.AsyncGetUserSubmitRecord(platform, handle, &response)
 }
@@ -70,12 +75,15 @@ func GetUserRecord(context *gin.Context) {
 		UserSubmitRecordHandle("luogu", user.Luogu, &userSubmitRecordResponses)
 		UserSubmitRecordHandle("vjudge", user.Vjudge, &userSubmitRecordResponses)
 	}
+	log.Println("promise init ok")
 	for _, response := range userContestRecordResponses {
 		for response.Status == "" {
+			time.Sleep(time.Millisecond)
 		}
 	}
 	for _, response := range userSubmitRecordResponses {
 		for response.Status == "" {
+			time.Sleep(time.Millisecond)
 		}
 	}
 	log.Println(userContestRecordResponses)
