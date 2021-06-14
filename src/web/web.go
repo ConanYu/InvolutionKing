@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"time"
 )
 
 func IndexPage(context *gin.Context) {
@@ -77,10 +78,12 @@ func GetUserRecord(context *gin.Context) {
 	log.Println("promise init ok")
 	for _, response := range userContestRecordResponses {
 		for response.Status == "" {
+			time.Sleep(time.Millisecond)
 		}
 	}
 	for _, response := range userSubmitRecordResponses {
 		for response.Status == "" {
+			time.Sleep(time.Millisecond)
 		}
 	}
 	log.Println(userContestRecordResponses)
