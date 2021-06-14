@@ -74,6 +74,7 @@ func GetUserRecord(context *gin.Context) {
 		UserSubmitRecordHandle("luogu", user.Luogu, &userSubmitRecordResponses)
 		UserSubmitRecordHandle("vjudge", user.Vjudge, &userSubmitRecordResponses)
 	}
+	log.Println("promise init ok")
 	for _, response := range userContestRecordResponses {
 		for response.Status == "" {
 		}
