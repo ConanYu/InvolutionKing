@@ -205,8 +205,8 @@ let data = {
     ],
 }
 */
-
-function draw_bar_graph(dom, data) {
+// 如果solved_list[0][0]是数值或者代表数值的字符串，data_is_num请设为true，否则为false
+function draw_bar_graph(dom, data, data_is_num) {
     let myChart = echarts.init(dom);
     myChart.clear();
 
@@ -225,7 +225,6 @@ function draw_bar_graph(dom, data) {
     ratings.sort(function (lhs, rhs) { return lhs - rhs; });
     let min_val = ratings[0];
     let max_val = ratings[ratings.length - 1];
-    // console.log(min_val, max_val);
     let series_list = [];
     let pieces = [];
     for (let rating of ratings) {
@@ -259,8 +258,8 @@ function draw_bar_graph(dom, data) {
     let option = {
         tooltip: {
             trigger: 'axis',
-            axisPointer: {            // Use axis to trigger tooltip
-                type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
+            axisPointer: {
+                type: 'shadow'
             }
         },
         grid: {
@@ -276,23 +275,23 @@ function draw_bar_graph(dom, data) {
             type: 'category',
             data: Ys,
         },
-        visualMap: {
-            show: false,
-            type: 'piecewise',
-            dimension: 2,
-            min: min_val,
-            max: max_val,
-            orient: 'horizontal',
-            left: 'center',
-            top: 'bottom',
-            // categories: ratings,
-            pieces: pieces,
-            inRange: {
-                color: ['green', 'yellow', 'red'],
-            }
-
-        },
         series: series_list,
+    };
+
+    if (data_is_num) option["visualMap"] = {
+        show: false,
+        type: 'piecewise',
+        dimension: 2,
+        min: min_val,
+        max: max_val,
+        orient: 'horizontal',
+        left: 'center',
+        top: 'bottom',
+        pieces: pieces,
+        inRange: {
+            color: ['green', 'yellow', 'red'],
+        }
+
     };
 
     myChart.setOption(option, true);
