@@ -19,26 +19,30 @@ function newInput(index) {
 function getContestDataFromResponse(response) {
     let contestData = {};
     for (let contestRecord of response.data["contest_record"]) {
-        if (contestData[contestRecord.platform] === undefined) {
-            contestData[contestRecord.platform] = {
-                oj_name: contestRecord.platform,
-                datas: [],
-            };
+        try {
+            if (contestData[contestRecord.platform] === undefined) {
+                contestData[contestRecord.platform] = {
+                    oj_name: contestRecord.platform,
+                    datas: [],
+                };
+            }
+            let rating_list = [];
+            for (let record of contestRecord.data.record) {
+                rating_list.push([
+                    record.timestamp * 1000,
+                    record.rating,
+                    record.name,
+                    record.url,
+                ]);
+            }
+            contestData[contestRecord.platform].datas.push({
+                username: contestRecord.handle,
+                user_url: contestRecord.data.profile_url,
+                rating_list: rating_list,
+            });
+        } catch (ex) {
+            console.log(ex);
         }
-        let rating_list = [];
-        for (let record of contestRecord.data.record) {
-            rating_list.push([
-                record.timestamp * 1000,
-                record.rating,
-                record.name,
-                record.url,
-            ]);
-        }
-        contestData[contestRecord.platform].datas.push({
-            username: contestRecord.handle,
-            user_url: contestRecord.data.profile_url,
-            rating_list: rating_list,
-        });
     }
     return contestData;
 }
@@ -46,24 +50,28 @@ function getContestDataFromResponse(response) {
 function getSubmitDataFromResponse(response) {
     let submitData = {};
     for (let submitRecord of response.data["submit_record"]) {
-        if (submitData[submitRecord.platform] === undefined) {
-            submitData[submitRecord.platform] = {
-                oj_name: submitRecord.platform,
-                datas: [],
-            };
+        try {
+            if (submitData[submitRecord.platform] === undefined) {
+                submitData[submitRecord.platform] = {
+                    oj_name: submitRecord.platform,
+                    datas: [],
+                };
+            }
+            let solved_list = [];
+            let source = submitRecord.data.distribution ?
+                submitRecord.data.distribution : submitRecord.data.oj_distribution;
+            for (let key in source) {
+                let value = source[key];
+                solved_list.push([key, value]);
+            }
+            submitData[submitRecord.platform].datas.push({
+                username: submitRecord.handle,
+                user_url: submitRecord.data.profile_url,
+                solved_list: solved_list,
+            });
+        } catch (ex) {
+            console.log(ex);
         }
-        let solved_list = [];
-        let source = submitRecord.data.distribution ?
-            submitRecord.data.distribution : submitRecord.data.oj_distribution;
-        for (let key in source) {
-            let value = source[key];
-            solved_list.push([key, value]);
-        }
-        submitData[submitRecord.platform].datas.push({
-            username: submitRecord.handle,
-            user_url: submitRecord.data.profile_url,
-            solved_list: solved_list,
-        });
     }
     return submitData;
 }
