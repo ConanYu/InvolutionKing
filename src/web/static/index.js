@@ -55,6 +55,7 @@ function getSubmitDataFromResponse(response) {
                 submitData[submitRecord.platform] = {
                     oj_name: submitRecord.platform,
                     datas: [],
+                    is_normal_distribution: !!submitRecord.data.distribution,
                 };
             }
             let solved_list = [];
@@ -135,7 +136,12 @@ new Vue({
                         }
                         for (let platform in submitData) {
                             let dom = document.getElementById(platform + "-submit-graph");
-                            draw_bar_graph(dom, submitData[platform.valueOf()]);
+                            draw_bar_graph(
+                                dom,
+                                submitData[platform.valueOf()],
+                                submitData[platform.valueOf()].is_normal_distribution
+                            );
+                            // console.log(platform.valueOf(), submitData[platform.valueOf()].is_normal_distribution);
                             app.$data.show[platform + "_submit_graph_show"] = true;
                         }
                         app.$data.gaoStatus = "OK";
